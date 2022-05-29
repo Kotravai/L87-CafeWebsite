@@ -1,0 +1,74 @@
+{% include 'header.html' %}
+
+
+<body>
+
+<div class="container">
+  <h1 class="heading">Work Friendly Cafes</h1>
+  <p class="description">These are my list of work friendly places for the wandering souls.</p>
+
+    <form action="/search" method="post">
+          <input type="text" class="form-control" placeholder="Location" name="location">
+    </form>
+
+    {% for mesg in get_flashed_messages() %}
+      <h3>{{ mesg }}</h3>
+    {% endfor %}
+
+   {% for cafe in cafes: %}
+  <div class="card" >
+    <div class="front" style="background-image: url({{cafe.img_url}}); background-size: cover;">
+        <p class="small">{{cafe.name}}</p>
+    </div>
+    <div class="back">
+      <div>
+    <div class="title">{{cafe.name}}</div>
+       <label>{{cafe.location}}</label>
+        <i class="fas fa-star star"></i>
+        <div class="rating">
+            <div class="row">
+                {% if cafe.has_sockets == 1 %}
+                    <div class="col-md-3">Sockets: <i class="fa fa-check", style="color:green"></i> </div>
+                {% else %}
+                    <div class="col-md-3">Sockets: <i class="fa fa-times", style="color:red"> </i></div>
+                {% endif %}
+                {% if cafe.has_wifi == 1 %}
+                    <div class="col-md-3">Wifi: <i class="fa fa-check", style="color:green"> </i></div>
+                {% else %}
+                    <div class="col-md-3">Wifi: <i class="fa fa-times", style="color:red">  </i></div>
+                {% endif %}
+                {% if cafe.can_take_calls == 1 %}
+                    <div class="col-md-3">Take Calls: <i class="fa fa-check", style="color:green"></i></div>
+                {% else %}
+                    <div class="col-md-3">Take Calls: <i class="fa fa-times", style="color:red">  </i></div>
+                {% endif %}
+                {% if cafe.has_toilet == 1 %}
+                    <div class="col-md-3">Toilet: <i class="fa fa-check", style="color:green"></i></div>
+                {% else %}
+                    <div class="col-md-3">Toilet: <i class="fa fa-times", style="color:red"> </i></div>
+                {% endif %}
+            </div>
+            <div class="row">
+              <div class="col-md-6">Seats: {{cafe.seats}}</div>
+              <div class="col-md-6">Coffee Price: {{cafe.coffee_price}}</div>
+            </div>
+        </div>
+          <a class="button pull-right" href="{{cafe.map_url}}">Directions</a>
+          <a href="{{ url_for('update_price', id=cafe.id) }}" class="button pull-right">Update Price</a>
+          <a href="{{ url_for('delete_cafe', cafe_id=cafe.id) }}" class="button delete-button pull-left">Delete</a>
+
+        </div>
+    </div>
+  </div>
+    {% endfor %}
+</div>
+
+<div class="container text-center add">
+
+<a href="{{url_for('add_cafe')}}" class="button">Add Cafes</a>
+</div>
+
+</body>
+
+
+{% include 'footer.html' %}
